@@ -10,7 +10,7 @@ contract DegenGamingToken {
 
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
-
+    string[] public items;
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
@@ -76,4 +76,26 @@ contract DegenGamingToken {
         emit Transfer(msg.sender, address(0), _value);
         return true;
     }
+ function addItem(string memory newItem) public onlyOwner {
+        items.push(newItem);
+    }
+
+ function redeemItem(uint256 itemId) public payable  {
+        require(
+            bytes(items[itemId]).length > 0,
+            "Item does not exist"
+        );
+
+        require(
+            balanceOf(msg.sender) > 0,
+            "Insufficient balance"
+        );
+
+        _burn(msg.sender, 100);
+    }
+
+     function getItemDetails(uint256 itemId) public view returns (string memory) {
+        return items[itemId];
+    }
+
 }
