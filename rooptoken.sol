@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 contract DegenGamingToken {
     string public name;
     string public symbol;
@@ -11,6 +17,7 @@ contract DegenGamingToken {
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
     string[] public items;
+    string[] public items_price;
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
@@ -79,6 +86,9 @@ contract DegenGamingToken {
  function addItem(string memory newItem) public onlyOwner {
         items.push(newItem);
     }
+ function addprice(string memory newItem_price) public onlyOwner {
+        items.push(newItem_price);
+    }
 
  function redeemItem(uint256 itemId) public payable  {
         require(
@@ -91,7 +101,7 @@ contract DegenGamingToken {
             "Insufficient balance"
         );
 
-        _burn(msg.sender, 100);
+        _burn(msg.sender, items_price[itemId]);
     }
 
      function getItemDetails(uint256 itemId) public view returns (string memory) {
